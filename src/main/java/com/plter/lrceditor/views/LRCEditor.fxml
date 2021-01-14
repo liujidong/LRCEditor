@@ -11,6 +11,7 @@
     </HBox>
 
     <HBox spacing="5" style="-fx-alignment: center-left">
+    	<Button text="去掉空白行" onAction="#btnTrimActionHandler"/>
         <Label text="歌曲标题："/>
         <TextField/>
         <Label text="演唱歌手"/>

@@ -23,7 +23,7 @@ import java.util.ResourceBundle;
  * Created by plter on 7/27/15.
  */
 public class LRCEditorController implements Initializable,ChangeListener<Duration>{
-    public Label label;
+//    public Label label;
     public Button btnInsertTimeTag;
     public TextArea taTextContent;
     public VBox root;
@@ -60,7 +60,6 @@ public class LRCEditorController implements Initializable,ChangeListener<Duratio
         int nextLineStartIndex = taTextContent.getText().indexOf("\n",currentLineStartIndex);
         if (nextLineStartIndex>-1){
             nextLineStartIndex = nextLineStartIndex+1;
-
             int nextLineEndIndex = taTextContent.getText().indexOf("\n",nextLineStartIndex);
             taTextContent.selectRange(nextLineStartIndex,nextLineEndIndex>-1?nextLineEndIndex:taTextContent.getLength());
         }
@@ -121,10 +120,13 @@ public class LRCEditorController implements Initializable,ChangeListener<Duratio
 
     public void btnSaveLrcActionHandler(ActionEvent actionEvent) {
         FileChooser fc = new FileChooser();
+        fc.setInitialDirectory(fileMp3.getParentFile());
+        fc.setInitialFileName(fileMp3.getName().substring(0, fileMp3.getName().lastIndexOf(".")));
         fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("LRC文件(*.lrc)","*.lrc"));
         fc.setTitle("保存Lrc文件");
         File f = fc.showSaveDialog(root.getScene().getWindow());
         try {
+        	if(f==null) {return;}
             FileOutputStream fos = new FileOutputStream(f);
             fos.write(taTextContent.getText().getBytes("UTF-8"));
             fos.close();
@@ -136,4 +138,20 @@ public class LRCEditorController implements Initializable,ChangeListener<Duratio
             e.printStackTrace();
         }
     }
+    public void btnTrimActionHandler(ActionEvent actionEvent) {
+    	taTextContent.setText(trimByLine(taTextContent.getText())); 
+    }
+	private String trimByLine(String value) {
+		StringBuffer sb = new StringBuffer();
+		if(value != null && value.length()>0) {
+			String[] lines = value.split("\n");
+			for (int i = 0; i < lines.length; i++) {
+				if(lines[i].trim().length()>0) {
+					sb.append(lines[i]).append("\n");
+				}
+			}
+			//return String.join("\n", lines);
+		}
+		return sb.toString();
+	}    
 }
