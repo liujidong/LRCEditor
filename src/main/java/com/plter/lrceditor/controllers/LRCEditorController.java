@@ -8,6 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -31,6 +32,7 @@ public class LRCEditorController implements Initializable,ChangeListener<Duratio
     public Button btnPauseMp3;
     public Button btnStopMp3;
     public Label labelTestSongText;
+    public TextField tfTitle;
 
     private String timeTag;
     private File fileMp3;
@@ -84,6 +86,7 @@ public class LRCEditorController implements Initializable,ChangeListener<Duratio
 
             mp3Player = new MediaPlayer(new Media(fileMp3.toURI().toURL().toString()));
             mp3Player.currentTimeProperty().addListener(this);
+            tfTitle.setText(getFileName(fileMp3.getName()));
         }
     }
 
@@ -121,7 +124,7 @@ public class LRCEditorController implements Initializable,ChangeListener<Duratio
     public void btnSaveLrcActionHandler(ActionEvent actionEvent) {
         FileChooser fc = new FileChooser();
         fc.setInitialDirectory(fileMp3.getParentFile());
-        fc.setInitialFileName(fileMp3.getName().substring(0, fileMp3.getName().lastIndexOf(".")));
+        fc.setInitialFileName(getFileName(fileMp3.getName()));
         fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("LRC文件(*.lrc)","*.lrc"));
         fc.setTitle("保存Lrc文件");
         File f = fc.showSaveDialog(root.getScene().getWindow());
@@ -153,5 +156,8 @@ public class LRCEditorController implements Initializable,ChangeListener<Duratio
 			//return String.join("\n", lines);
 		}
 		return sb.toString();
-	}    
+	}
+	private String getFileName(String fullFileName) {
+		return fullFileName.substring(0, fullFileName.lastIndexOf("."));
+	}
 }
